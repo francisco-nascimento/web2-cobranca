@@ -26,7 +26,7 @@ public class CartaCobrancaService {
 		
 		Date data5Dias = Datas.calcularData(new Date(), -5);
 		
-		List<Cliente> clientesEmDebito = debitoDAO.findByDebitosPendentes(data5Dias);
+		List<Cliente> clientesEmDebito = debitoDAO.pesquisarDebitosPendentes(data5Dias);
 		
 		int quantidadeCartas = 0;
 		
@@ -35,7 +35,7 @@ public class CartaCobrancaService {
 			Date dataVencimento = Datas.criarData(10, mes, ano);
 			boolean existeCarta = this.cartaCobrancaDAO.existsByVencimentoAndCliente(dataVencimento, c);
 			if (!existeCarta) {
-				List<Debito> debitos = this.debitoDAO.findByClienteAndStatus(c, Status.PENDENTE);
+				List<Debito> debitos = this.debitoDAO.pesquisarDebitosPendentesPorCliente(data5Dias, c);
 				double total = 0;
 				for(Debito deb : debitos) {
 					total += deb.getValor();

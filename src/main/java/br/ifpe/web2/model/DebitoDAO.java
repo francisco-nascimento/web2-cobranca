@@ -12,8 +12,15 @@ import br.ifpe.web2.domain.Status;
 
 public interface DebitoDAO extends JpaRepository<Debito, Integer> {
 
-	public List<Debito> findByClienteAndStatus(Cliente cliente, Status status);
-	
-	@Query("select distinct d.cliente from Debito d where d.status = 'PENDENTE' and d.vencimento <= :vencimento")
-	public List<Cliente> findByDebitosPendentes(Date vencimento);
+	@Query("select distinct d.cliente from Debito d where "
+			+ "d.status = 'PENDENTE' "
+			+ "and d.vencimento < :data")
+	public List<Cliente> pesquisarDebitosPendentes(Date data);
+
+	@Query("select d from Debito d where "
+			+ "d.status = 'PENDENTE' "
+			+ "and d.vencimento < :data "
+			+ "and d.cliente = :cliente")
+	public List<Debito> pesquisarDebitosPendentesPorCliente(Date data,
+			Cliente cliente);
 }
