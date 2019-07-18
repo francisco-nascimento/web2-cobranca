@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="webjars/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet"
+	href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" />
+</head>
+<body>
+
+	<div class="container">
+		<div class="card">
+			<div class="card-block">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Nome cliente</th>
+							<th>Vencimento</th>
+							<th>Valor</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="deb : ${listaDebitos}">
+							<td th:text="${deb.cliente.nome}">
+							<td th:text="${#dates.format(deb.vencimento, 'dd/MM/yyyy')}">
+							<td th:text="|R$ ${#numbers.formatDecimal(deb.valor, 1, 'DEFAULT', 2, 'DEFAULT')}|">
+							<td th:text="${deb.status}">
+						</tr>
+					</tbody>
+				</table>
+				<hr />
+				<ul class="nav nav-pills">
+					<li class="nav-item"
+						th:each="i : ${#numbers.sequence(1,listaDebitos.totalPages)}">
+						<a th:text="${i}" th:href="@{/(page=${i})}" class="nav-link"></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="card">
+
+			<form action="/gerarCartas" method="post">
+				<select name="mes">
+					<option th:each="i : ${#numbers.sequence(1,12)}" th:text="${i}"
+						th:value="${i-1}"></option>
+				</select> <select name="ano">
+					<option th:each="i : ${#numbers.sequence(2019,2002)}" th:text="${i}"
+						th:value="${i}"></option>
+				</select>
+				<button>Gerar Cartas</button>
+				<div class="alert alert-sucess" th:if="${numCartas}" th:text="${numCartas}"></div>
+			</form>
+		</div>
+	</div>
+
+
+</body>
+</html>
