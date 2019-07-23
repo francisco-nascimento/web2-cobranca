@@ -15,6 +15,7 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class Debito {
@@ -25,6 +26,7 @@ public class Debito {
 	@JoinColumn(name="CODCLIENTE")
 	private Cliente cliente;
 	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date vencimento;
 	private Double valor;
 	@Enumerated(EnumType.STRING)

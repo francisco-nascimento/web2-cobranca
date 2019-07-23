@@ -9,5 +9,6 @@ import br.ifpe.web2.domain.Cliente;
 
 public interface CartaCobrancaDAO extends JpaRepository<CartaCobranca, Integer>{
 
-	public boolean existsByVencimentoAndCliente(Date dataVencimento, Cliente cliente);
+	public boolean existsByVencimentoAndCliente(
+			Date dataVencimento, Cliente cliente);
 }

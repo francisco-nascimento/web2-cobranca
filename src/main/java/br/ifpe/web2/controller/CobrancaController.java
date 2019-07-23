@@ -25,7 +25,7 @@ public class CobrancaController {
 	@GetMapping("/")
 	public ModelAndView debitos(@RequestParam(defaultValue="1") int page) {
 		ModelAndView mv = new ModelAndView("debito-list");
-		Page<Debito> pagina = this.debitoService.findAll(PageRequest.of(page - 1, 6, Sort.by("vencimento")));
+		Page<Debito> pagina = this.debitoService.findAll(PageRequest.of(page - 1, 6, Sort.by("cliente.nome")));
 		mv.addObject("listaDebitos", pagina) ;
 		return mv;
 	}

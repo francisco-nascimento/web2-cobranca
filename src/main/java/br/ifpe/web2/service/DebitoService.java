@@ -18,9 +18,13 @@ public class DebitoService {
 		return debitoDAO.findAll(pageable);
 	}
 
-//	public Page<Debito> findByNomeCliente(String nome, Pageable pageable) {
-//		return debitoDAO.findByNomeCliente(nome, pageable);
-//	}
+	public Debito findDebito(Integer codigo) {
+		return this.debitoDAO.getOne(codigo);
+	}
+
+	public void salvarDebito(Debito debito) {
+		this.debitoDAO.saveAndFlush(debito);
+	}
 	
 	
 }

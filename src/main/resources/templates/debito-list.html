@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -6,8 +7,10 @@
 <script type="text/javascript" src="webjars/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript"
 	src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/debito.js"></script>
 <link rel="stylesheet"
 	href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" />
+
 </head>
 <body>
 
@@ -24,10 +27,12 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="deb : ${listaDebitos}">
+						<tr th:each="deb : ${listaDebitos}"
+							th:onclick="|javascript:editDebito(${deb.codigo});|">
 							<td th:text="${deb.cliente.nome}">
 							<td th:text="${#dates.format(deb.vencimento, 'dd/MM/yyyy')}">
-							<td th:text="|R$ ${#numbers.formatDecimal(deb.valor, 1, 'DEFAULT', 2, 'DEFAULT')}|">
+							<td
+								th:text="|R$ ${#numbers.formatDecimal(deb.valor, 1, 'DEFAULT', 2, 'DEFAULT')}|">
 							<td th:text="${deb.status}">
 						</tr>
 					</tbody>
@@ -48,15 +53,58 @@
 					<option th:each="i : ${#numbers.sequence(1,12)}" th:text="${i}"
 						th:value="${i-1}"></option>
 				</select> <select name="ano">
-					<option th:each="i : ${#numbers.sequence(2019,2002)}" th:text="${i}"
-						th:value="${i}"></option>
+					<option th:each="i : ${#numbers.sequence(2019,2002)}"
+						th:text="${i}" th:value="${i}"></option>
 				</select>
 				<button>Gerar Cartas</button>
-				<div class="alert alert-sucess" th:if="${numCartas}" th:text="${numCartas}"></div>
+				<div class="alert alert-sucess" th:if="${numCartas}"
+					th:text="${numCartas}"></div>
 			</form>
 		</div>
 	</div>
+	<div id="debitoModalHolder"></div>
+	<div id="debitoModal" class="modal fade" role="dialog"
+		th:fragment="modalContents" th:if="${debito}">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" th:text="${debito.cliente.nome}">Nome
+						do Cliente</h4>
+				</div>
+				<div class="modal-body">
+					<form th:object="${debito}" th:action="salvarDebito" method="post">
 
+						<input type="hidden" name="codigo" th:value="${debito.codigo}">
+						<input type="hidden" th:field="*{cliente}"
+							th:value="${debito.cliente}">
+						<div class="form-group row">
+							<label class="col-sm-2 col-form-label">Data: </label> <input
+								class="col-sm-5" type="date" name="vencimento"
+								th:value="${debito.vencimento}"> <span
+								class="col-sm-1 input-group-text">R$</span> 
+								<input type="text" th:field="*{valor}" class="form-control col-sm-3" size="10"
+								th:value="${#numbers.formatDecimal(debito.valor, 1, 'DEFAULT', 2, 'DEFAULT')}">
+						</div>
+						<div class="form-group form-check-inline">
+							<label class=" form-check-label">Status: </label> 
+							<input
+								type="radio" th:field="*{status}" th:each="st : ${listaStatus}"
+								th:text="|${st}&nbsp;&nbsp;|" th:value="${st}"
+								class="form-check-input">
+						</div>
+						<div class="form-group">
+						<button type="submit" class="btn btn-primary">Salvar</button>
+						</div>
+						
+
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </body>
 </html>
