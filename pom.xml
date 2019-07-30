@@ -58,6 +58,10 @@
 			<artifactId>bootstrap</artifactId>
 			<version>4.3.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
