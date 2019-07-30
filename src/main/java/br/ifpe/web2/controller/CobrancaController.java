@@ -22,19 +22,19 @@ public class CobrancaController {
 	@Autowired
 	private CartaCobrancaService cartaCobrancaService;
 	
-	@GetMapping("/")
-	public ModelAndView debitos(@RequestParam(defaultValue="1") int page) {
-		ModelAndView mv = new ModelAndView("debito-list");
-		Page<Debito> pagina = this.debitoService.findAll(PageRequest.of(page - 1, 6, Sort.by("cliente.nome")));
-		mv.addObject("listaDebitos", pagina) ;
-		return mv;
-	}
+//	@GetMapping("/")
+//	public ModelAndView debitos(@RequestParam(defaultValue="1") int page) {
+//		ModelAndView mv = new ModelAndView("debito-list");
+//		Page<Debito> pagina = this.debitoService.findAll(PageRequest.of(page - 1, 6, Sort.by("cliente.nome")));
+//		mv.addObject("listaDebitos", pagina) ;
+//		return mv;
+//	}
 	
 	@PostMapping("/gerarCartas")
 	public ModelAndView gerarCartas(@RequestParam int mes, @RequestParam int ano) {
 		Integer numCartas = cartaCobrancaService.gerarCartas(mes, ano);
 		ModelAndView mv = new ModelAndView("debito-list");
-		Page<Debito> pagina = this.debitoService.findAll(PageRequest.of(0, 6, Sort.by("vencimento")));
+		Page<Debito> pagina = this.debitoService.listarTodos(PageRequest.of(0, 6, Sort.by("vencimento")));
 		mv.addObject("listaDebitos", pagina) ;
 		mv.addObject("numCartas", numCartas);
 		

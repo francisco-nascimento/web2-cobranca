@@ -3,13 +3,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Cobrança :: Débitos</title>
 <script type="text/javascript" src="webjars/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript"
 	src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/js/debito.js"></script>
 <link rel="stylesheet"
 	href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/css/debito.css" />
 
 </head>
 <body>
@@ -17,7 +18,20 @@
 	<div class="container">
 		<div class="card">
 			<div class="card-block">
-				<table class="table table-hover">
+				<div class="div-filtro">
+					<h2>Lista de Débitos</h2>
+					<h5 id="titulo-filtro">Filtro:</h5>
+					<input type="text" id="nome_search"
+								placeholder="Por nome do cliente"
+								oninput="javascript:filtrarDebitos(1);" />
+					<select onchange="javascript:filtrarDebitos(1);" id="status_search">
+						<option value="">Por status</option>
+						<option th:each="st : ${listaStatus}"
+								th:text="${st}" th:value="${st}">
+					</select>
+				</div>
+				<table class="table table-hover" id="resultList"
+					th:fragment="frag-debitos">
 					<thead>
 						<tr>
 							<th>Nome cliente</th>
@@ -25,6 +39,8 @@
 							<th>Valor</th>
 							<th>Status</th>
 						</tr>
+					</thead>
+					<thead>
 					</thead>
 					<tbody>
 						<tr th:each="deb : ${listaDebitos}"
@@ -36,18 +52,23 @@
 							<td th:text="${deb.status}">
 						</tr>
 					</tbody>
+					<tr>
+						<td colspan="4">
+							<ul class="nav nav-pills">
+								<li class="nav-item"
+									th:each="i : ${#numbers.sequence(1,listaDebitos.totalPages)}">
+									<a th:text="${i}"
+									th:href="|javascript:filtrarDebitos(${i});|" class="nav-link"></a>
+								</li>
+							</ul>
+						</td>
+					</tr>
 				</table>
 				<hr />
-				<ul class="nav nav-pills">
-					<li class="nav-item"
-						th:each="i : ${#numbers.sequence(1,listaDebitos.totalPages)}">
-						<a th:text="${i}" th:href="@{/(page=${i})}" class="nav-link"></a>
-					</li>
-				</ul>
 			</div>
 		</div>
 		<div class="card">
-
+			<h4>Cartas de Cobrança</h4>
 			<form action="/gerarCartas" method="post">
 				<select name="mes">
 					<option th:each="i : ${#numbers.sequence(1,12)}" th:text="${i}"
@@ -81,21 +102,20 @@
 							<label class="col-sm-2 col-form-label">Data: </label> <input
 								class="col-sm-5" type="date" name="vencimento"
 								th:value="${debito.vencimento}"> <span
-								class="col-sm-1 input-group-text">R$</span> 
-								<input type="text" th:field="*{valor}" class="form-control col-sm-3" size="10"
+								class="col-sm-1 input-group-text">R$</span> <input type="text"
+								th:field="*{valor}" class="form-control col-sm-3" size="10"
 								th:value="${#numbers.formatDecimal(debito.valor, 1, 'DEFAULT', 2, 'DEFAULT')}">
 						</div>
 						<div class="form-group form-check-inline">
-							<label class=" form-check-label">Status: </label> 
-							<input
+							<label class=" form-check-label">Status: </label> <input
 								type="radio" th:field="*{status}" th:each="st : ${listaStatus}"
 								th:text="|${st}&nbsp;&nbsp;|" th:value="${st}"
 								class="form-check-input">
 						</div>
 						<div class="form-group">
-						<button type="submit" class="btn btn-primary">Salvar</button>
+							<button type="submit" class="btn btn-primary">Salvar</button>
 						</div>
-						
+
 
 					</form>
 				</div>
@@ -105,6 +125,5 @@
 			</div>
 		</div>
 	</div>
-
 </body>
 </html>
